@@ -1,0 +1,124 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+int K,N,M;
+int A,B;
+
+const int maxn = 2005;
+
+
+struct Edge
+{
+    int to;
+    int ti;
+    int hi;
+};
+
+vector<Edge> G[maxn];
+
+const int INF = 100000000;
+
+int ans = INF;
+
+int dis[2005][205];
+
+typedef pair<int,int> P;
+
+void Dijkstra(int s)
+{
+    priority_queue<P,vector<P>, greater<P> > pque;
+    P p;
+    for(int i  = 0; i<=N; i++)
+    {
+        for(int j = 0; j<=205; j++)
+        {
+            dis[i][j] = INF;
+        }
+    }
+    p = {0,s};
+    pque.push(p);
+    dis[s][0] = 0;
+
+    while(!pque.empty())
+    {
+        P pp;
+        pp = pque.top();
+        pque.pop();
+        int v = pp.second;
+        for(int i = 0; i<G[v].size(); i++)
+        {
+            for(int j = 0; j+G[v][i].hi < K; j++)
+            {
+                if(pp.first<dis[v][j])
+                {
+                    continue;
+                }
+                int alt = dis[v][j] + G[v][i].ti;
+                if(alt < dis[G[v][i].to][G[v][i].hi+j])
+                {
+                    dis[G[v][i].to][G[v][i].hi+j] = alt;
+                        P tmpp;
+                        tmpp = {alt, G[v][i].to};
+                        pque.push(tmpp);
+                   
+                }
+
+            }
+        }
+    }
+}
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cout.tie(NULL);
+
+    cin>>K>>N>>M;
+    for(int i = 0; i<M; i++)
+    {
+        int a,b,t,h;
+        cin>>a>>b>>t>>h;
+        Edge e;
+        e.hi = h;
+        e.ti = t;
+        e.to = b;
+        G[a].push_back(e);
+        e.to = a;
+        G[b].push_back(e);
+    }
+    cin>>A>>B;
+    Dijkstra(A);
+    for(int i = 0; i<K; i++)
+    {
+        ans = min(ans, dis[B][i]);
+    }
+    if(ans == INF)
+    {
+        cout<<-1<<endl;
+    }
+    else
+    {
+        cout<<ans<<endl;
+    }
+   return 0;
+   }
