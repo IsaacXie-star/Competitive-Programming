@@ -1,0 +1,74 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <map>
+
+using namespace std;
+
+const int N = 1010;
+int r[N];
+
+int main()
+{
+    int n;
+    cin>>n;
+    while(n --)
+    {
+        int t;
+        cin>>t;
+        r[t] ++;
+    }
+    int cnt1 = 0, cnt2 = 0;
+    int maxr = 0, secr = 0, read1, read2;
+    for(int i = 1; i <= 1000; i++) maxr = max(maxr, r[i]);
+    
+    for(int i = 1; i<=1000; i++)
+        if(r[i] == maxr)
+            cnt1++;
+            
+    for(int i = 1; i<=1000; i++)
+        if(r[i] < maxr && r[i] >= secr)
+            secr = r[i];
+            
+    
+    if(cnt1 >= 2)
+    {
+        int x1, x2;
+        for(int i = 1; i<=1000; i++)
+            if(r[i] == maxr)
+            {
+                x1 = i;
+                break;
+            }
+            
+        for(int i = 1000; i >= 1; i--)
+            if(r[i] == maxr)
+            {
+                x2 = i;
+                break;
+            }
+        
+        
+        cout<<x2 - x1<<endl;
+    }
+    else
+    {
+        int x1;
+        for(int i = 1; i<=1000; i++)
+            if(r[i] == maxr)
+            {
+                x1 = i;
+                break;
+            }
+        
+        int ans = -1;
+        
+        for(int i = 1; i <= 1000; i++)
+            if(r[i] == secr)
+                ans = max(ans, abs(x1 - i));
+        
+        cout<<ans<<endl;
+    }
+    
+    return 0;
+}
