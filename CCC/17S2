@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <cmath>>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+
+using namespace std;
+
+
+int main()
+{
+  int n;
+  cin>>n;
+  vector<int> atide ={};
+  vector<int> htide ={};
+  vector<int> ltide={};
+  
+  for(int i = 0; i<n; i++)
+  {
+      int tide;
+      cin>>tide;
+      atide.push_back(tide);
+      
+  }
+  sort(atide.begin(),atide.end());
+  for(int j = 0; j<n; j++)
+  {
+      if(n%2 == 0)
+      {
+          if(j<(n/2))
+          {
+              ltide.push_back(atide[j]);
+          }
+          else
+          {
+              htide.push_back(atide[j]);
+          }
+      }
+      else if(n%2 == 1)
+      {
+          if(j<=(n/2))
+          {
+              ltide.push_back(atide[j]);
+          }
+          else
+          {
+              htide.push_back(atide[j]);
+          }
+      }
+  }
+  reverse(ltide.begin(),ltide.end());
+  if(n%2==0)
+  {
+      for(int k = 0; k<(n/2); k++)
+      {
+          cout<<ltide[k]<<" "<<htide[k]<<" ";
+      }
+  }
+  else if(n%2 == 1)
+  {
+      for(int k = 0; k<(n/2);k++)
+      {
+          cout<<ltide[k]<<" "<<htide[k]<<" ";
+      }
+      cout<<ltide[(n/2)];
+  }
+  
+  
+    return 0;
+}
