@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+const int N = 3010;
+
+int t, n, m;
+int s[6];
+vector<int> c[6];
+vector<int> v[6];
+int f[6][N];
+
+int main()
+{
+    cin>>t>>n;
+    set<int> check;
+    for(int i = 1; i<=n; i++)
+    {
+        int x, y, z;
+        cin>>x>>y>>z;
+        c[z].push_back(x);
+        v[z].push_back(y);
+        s[z]++;
+        check.insert(z);
+    }
+    cin>>m;
+    if(check.size() != t)
+    {
+        cout<<-1<<endl;
+        return 0;
+    }
+    
+    memset(f, -1, sizeof(f));
+    f[0][0] = 0;
+    
+    for(int i = 1; i<=t; i++)
+    {
+        for(int k = 0; k < s[i]; k++)
+        {
+            int val = v[i][k], cost = c[i][k];
+            for(int j = cost; j <= m; j++)
+            {
+                f[i][j] = max(f[i][j], f[i-1][j-cost] + val);
+            }
+        }
+    }
+    int res = -1;
+    
+    for(int i = 0; i <=m; i++)
+        res = max(res, f[t][i]);
+    
+    cout<<res<<endl;
+    
+    return 0;
+}
