@@ -1,0 +1,90 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <map>
+#include <unordered_map>
+#include <queue>
+
+using namespace std;
+
+const int N = 110, M = 5510 * 2;
+
+int n, m;
+int cost;
+int h[N], ne[M], e[M], w[M], idx;
+int dist1[N], dist2[N], ans[N];
+bool st[N];
+unordered_map<string, int> mp;
+
+void add(int a, int b, int c)
+{
+    ne[idx] = h[a], e[idx] = b, w[idx] = c, h[a] = idx ++;
+}
+
+void bfs()
+{
+    // dist1 is cost, dist2 is times to translate
+    memset(dist1, 0x3f, sizeof(dist1));
+    memset(dist2, 0x3f, sizeof(dist2));
+    memset(ans, 0x3f, sizeof(ans));
+    ans[1] = 0;
+    dist1[1] = 0, dist2[1] = 0;
+    ans[1] = 0;
+    queue<int> q;
+    q.push(1);
+    while(q.size())
+    {
+        int t = q.front();
+        q.pop();
+        st[t] = true;
+        for(int i = h[t]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            if(dist2[j] == dist2[t] + 1 || dist2[j] == 0x3f3f3f3f)
+            {
+                dist1[j] = dist1[t] + w[i];
+                dist2[j] = dist2[t] + 1;
+                ans[j] = min(ans[j], w[i]);
+                q.push(j);
+            }
+            
+        }
+    }
+}
+
+int main()
+{
+    memset(h, -1, sizeof(h));
+    cin>>n>>m;
+    int index = 0;
+    mp["English"] = ++ index;
+    for(int i = 0; i < n; i ++)
+    {
+        string s;
+        cin>>s;
+        mp[s] = ++ index;
+    }
+    for(int i = 0; i < m; i ++)
+    {
+        string a, b;
+        int c;
+        cin>>a>>b>>c;
+        int u, v;
+        u = mp[a], v = mp[b];
+        add(u, v, c), add(v, u, c);
+    }
+    bfs();
+    for(int i = 1; i <= n + 1; i ++)
+    {
+        if(!st[i])
+        {
+            cout<<"Impossible"<<endl;
+            return 0;
+        }
+        cost += ans[i];
+    }
+
+    cout<<cost<<endl;
+    
+    return 0;
+}
