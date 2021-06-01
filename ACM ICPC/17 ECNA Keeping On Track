@@ -1,0 +1,124 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+typedef long long LL;
+
+const int N = 40010;
+
+int n, m, tnode;
+int h[N], ne[N], e[N], idx;
+LL tsize[N];
+int fa[N];
+bool st[N];
+
+void add(int a, int b)
+{
+    ne[idx] = h[a], e[idx] = b, h[a] = idx ++;
+}
+
+void dfs(int u)
+{
+    tsize[u] = 1;
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!st[j])
+        {
+            st[j] = true;
+            dfs(j);
+            tsize[u] += tsize[j];
+        }
+    }
+    return;
+}
+
+LL get_disconnect(vector<LL> &subtr)
+{
+    int n = subtr.size();
+    LL res = 0;
+    for(int i = 0; i < n; i ++)
+        for(int j = i + 1; j < n; j ++)
+            res += subtr[i] * subtr[j];
+    return res;
+}
+
+void label_fa(int u)
+{
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!st[j])
+        {
+            st[j] = true;
+            fa[j] = u;
+            //cout<<"---->>>  "<<j<<" 's father:  "<<u<<endl;
+            label_fa(j);
+        }
+    }
+}
+
+int main()
+{
+    memset(h, -1, sizeof(h));
+    cin>>n;
+    int maxnode = -1;
+    for(int i = 0; i < n; i ++)
+    {
+        int a, b;
+        cin>>a>>b;
+        add(a, b), add(b, a);
+        maxnode = max(maxnode, max(a, b));
+    }
+    
+    LL ans1 = 0, ans2 = 0;
+    st[0] = true;
+    dfs(0);
+    m = maxnode;
+    memset(st, false, sizeof(st));
+    st[0] = true;
+    fa[0] = -1;
+    label_fa(0);
+    
+    for(int i = 0; i <= m; i ++)
+    {
+        LL tmp = 0;
+        vector<LL> subtr = {};
+        for(int j = h[i]; j != -1; j = ne[j])
+        {
+            int k = e[j];
+            if(k != fa[i])
+            {
+                //cout<<i<<" 's son: "<<k<<"  size:"<<tsize[k]<<endl;
+                subtr.push_back(tsize[k]);
+            }
+        }
+        subtr.push_back(tsize[0] - tsize[i]);
+        tmp = get_disconnect(subtr);
+        if(tmp > ans1)
+        {
+            ans1 = tmp;
+            tnode = i;
+        }
+    }
+    vector<LL> fix = {};
+    for(int i = h[tnode]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(j != fa[tnode]) fix.push_back(tsize[j]);
+    }
+    fix.push_back(tsize[0] - tsize[tnode]);
+    sort(fix.begin(), fix.end(), greater<int>());
+    if(fix.size() == 1) ans2 = ans1;
+    else
+    {
+        ans2 = ans1 - fix[0] * fix[1];
+    }
+    
+    cout<<ans1<<endl;
+    cout<<ans2<<endl;
+    
+    return 0;
+}
