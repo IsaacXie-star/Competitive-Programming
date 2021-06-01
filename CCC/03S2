@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+//when using getline(), always remember to use cin.ignore when there are other cin before getline
+//to convert uppercase letters to lowercase letters, use the tolower() function, this function take char as parameter, however, it will return the ascii number, so, instead, you should use it like char(tolower()), if it has now lowercase, the function will skip it
+using namespace std;
+
+
+
+
+int main()
+{
+   int n;
+    cin>>n;
+    cin.ignore();
+    set<char> v = {'a','e','i','o','u'};
+    for(int i = 0; i<n;i++)
+    {
+        vector<string> rhyme = {};
+        for(int j = 0; j<4; j++)
+        {
+            string ss;
+            getline(cin,ss);
+            string s = "";
+            for(int i : ss)
+            {
+                s+= char(tolower(i));
+            }
+            
+            if(s.find(' ') == string::npos)
+            {
+                int vowl = 0;
+                for(int i = 0; i<s.size(); i++)
+                {
+
+                    if(v.count(s[i])==1)
+                    {
+                        vowl = i;
+                    }
+                }
+                string vowl1 = s.substr(vowl,s.size() - vowl);
+                rhyme.push_back(vowl1);
+            }
+            else
+            {
+                int spacelocation = 0;
+                for(int i = 0; i<s.size(); i++)
+                {
+                   if(s[i]== ' ')
+                   {
+                       spacelocation = i;
+                   }
+                }
+                string word;
+                word = s.substr(spacelocation+1, s.size()-spacelocation-1);
+                int vowl2 = 0;
+                for(int i = 0; i<word.size(); i++)
+                {
+                    if(v.count(word[i]) == 1)
+                    {
+                        vowl2 = i;
+                    }
+                }
+                string vowl3 = word.substr(vowl2,word.size() - vowl2);
+                rhyme.push_back(vowl3);
+
+            }
+
+        }
+         if(rhyme[0] == rhyme[3] && rhyme[1]== rhyme[2]&&rhyme[1]!=rhyme[0])
+            {
+                cout<<"shell"<<endl;
+            }
+            else if(rhyme[0] == rhyme[1] && rhyme[1]== rhyme[2] && rhyme[2]==rhyme[3])
+            {
+                cout<<"perfect"<<endl;
+            }
+            else if(rhyme[0] == rhyme[1] && rhyme[2]== rhyme[3]&&rhyme[1]!=rhyme[2])
+            {
+                cout<<"even"<<endl;
+            }
+            else if(rhyme[0] == rhyme[2] && rhyme[1]== rhyme[3]&&rhyme[0]!=rhyme[1])
+            {
+                cout<<"cross"<<endl;
+            }
+            else
+            {
+                cout<<"free"<<endl;
+            }
+
+    }
+
+     return 0;
+   }
