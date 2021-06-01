@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+const int N = 200010;
+
+int n,sum,u;
+
+struct P
+{
+    int m,c;
+} a[N];
+
+bool compare(P a, P b)
+{
+    if(a.m == b.m) return a.c < b.c;
+    else return a.m < b.m;
+}
+
+int main()
+{
+    cin>>n;
+    for(int i = 1; i<=n; i++)
+    {
+        cin>>a[i].m>>a[i].c;
+        sum += a[i].c;
+    }
+    
+    sort(a+1, a+1+n, compare);
+    
+    priority_queue<int, vector<int>, greater<int> > q;
+    
+    int un = -1;
+    
+    
+    
+    for(int i = n; i>=1; i--)
+    {
+        u += a[i].c;
+        q.push(a[i].c);
+        if(q.size() > n - a[i].m)
+        {
+            u -= q.top();
+            q.pop();
+        }
+        un = max(un, u);
+    }
+    
+    cout<<sum - un<<endl;
+    
+    return 0;
+}
