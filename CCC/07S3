@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+
+const int maxn = 10000;
+
+int n;
+
+vector<int> G[maxn];
+
+bool vis[maxn];
+
+bool found;
+
+int dfs(int a, int b, int step)
+{
+    vis[a] = true;
+    for(int i = 0; i<G[a].size(); i++)
+    {
+        if(!vis[G[a][i]])
+        {
+            vis[G[a][i]] = true;
+        if(G[a][i] == b)
+        {
+            found = true;
+            return step;
+        }
+        else
+        {
+            return dfs(G[a][i], b, step+1);
+        }
+        }
+    }
+    return step = -1;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cout.tie(NULL);
+
+    cin>>n;
+    for(int i = 0; i<n; i++)
+    {
+        int fa,fb;
+        cin>>fa>>fb;
+        G[fa].push_back(fb);
+    }
+    int xx,yy;
+
+    while(cin>>xx>>yy && !( xx == 0 && yy == 0))
+    {
+        memset(vis, false, sizeof(vis));
+        found = false;
+        int ans;
+
+        ans = dfs(xx,yy,0);
+
+        if(found)
+        {
+            cout<<"Yes "<<ans<<endl;
+        }
+        else
+        {
+            cout<<"No"<<endl;
+        }
+
+    }
+
+
+   return 0;
+   }
