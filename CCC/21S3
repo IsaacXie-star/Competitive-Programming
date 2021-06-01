@@ -1,0 +1,91 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200010, M = 1000010;
+
+struct Node 
+{
+    LL p, w, d, pmd, ppd;
+} rd1[N], rd2[N];
+
+struct compare1
+{
+    bool operator() (Node a, Node b)
+    {
+        return a.pmd < b.pmd;
+    }
+};
+
+struct compare2
+{
+    bool operator() (Node a, Node b)
+    {
+        return a.ppd < b.ppd;
+    }
+};
+
+int n;
+LL rd1sum[N], rd2sum[N];
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin>>n;
+    LL x = 1e9 + 10, ed = -1;
+    for(int i = 1; i <= n; i++)
+    {
+        LL p, w, d;
+        cin>>p>>w>>d;
+        x = min(x, p);
+        ed = max(ed, p);
+        Node r;
+        r.p = p, r.w = w, r.d = d;
+        r.ppd = p + d, r.pmd = p - d;
+        rd1[i] = rd2[i] = r;
+    }
+    
+    sort(rd1 + 1, rd1 + 1 + n, compare1());
+    sort(rd2 + 1, rd2 + 1 + n, compare2());
+    
+    for(int i = 1; i <= n; i++)
+    {
+        rd1sum[i] = rd1[i].w;
+        rd1sum[i] += rd1sum[i-1];
+        rd2sum[i] = rd2[i].w;
+        rd2sum[i] += rd2sum[i-1];
+    }
+    
+    LL lsum = 0, rsum = 0, tsum, res = 1e18;
+    
+    for(int i = 1; i <= n; i++)
+    {
+        Node &h = rd1[i];
+        rsum += (max((LL)0, h.p - h.d - x)) * h.w;
+    }
+    
+    res = min(res, lsum + rsum);
+    
+    int lp = 1, rp = 1;
+    //cout<<res<<endl;
+    for(x; x <= ed; x++)
+    {
+       // cout<<"---"<<x<<"  "<<lsum<<"  "<<rsum<<"   "<<lp<<"   "<<rp<<endl;
+        while(lp <= n && rd1[lp].pmd <= x) lp++;
+        rsum -= (rd1sum[n] - rd1sum[lp - 1]);
+        while(rp <= n && rd2[rp].ppd <= x) rp++;
+        lsum += rd2sum[rp-1];
+        res = min(res, lsum + rsum);
+    }
+    
+    cout<<res<<endl;
+    
+    return 0;
+}
