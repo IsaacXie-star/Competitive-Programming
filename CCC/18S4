@@ -1,0 +1,37 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <map>
+#include <unordered_map>
+
+using namespace std;
+
+typedef long long LL;
+
+int n;
+unordered_map<int,LL> f;
+
+LL dfs(int v)
+{
+    if (f[v]) return f[v];
+    LL j;
+    LL val = 0;
+    for (LL i = 1; i <= v; i = j + 1)
+    {
+        LL t = v / i;
+        j = v / t;
+        if (i != 1) f[v] += dfs(t) * (j - i + 1);
+    }
+    return f[v];
+}
+
+int main()
+{
+    cin >> n;
+    f[1] = 1;
+    f[2] = 1;
+    dfs(n);
+    cout << f[n] << endl;
+    
+    return 0;
+}
