@@ -1,0 +1,167 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+const int N = 50010, M = N * 2;
+
+int n, k, cnt;
+int h[N], ne[M], e[M], idx;
+int depth[N], sz[N], fa[N], son[N], top[N];
+int id[N], nw[N];
+
+struct Node
+{
+    int l, r;
+    int tmax, add;
+} tr[N * 4];
+
+
+void add(int a, int b)
+{
+    ne[idx] = h[a], e[idx] = b, h[a] = idx ++;
+}
+
+void dfs1(int u, int father, int dep)
+{
+    fa[u] = father, depth[u] = dep, sz[u] = 1;
+    for (int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if (j == father) continue;
+        dfs1(j, u, dep + 1);
+        sz[u] += sz[j];
+        if (sz[son[u]] < sz[j]) son[u] = j;
+    }
+    return;
+}
+
+void dfs2(int u, int t)
+{
+    id[u] = ++ cnt, nw[cnt] = 0, top[u] = t;
+    if (!son[u]) return;
+    dfs2(son[u], t);
+    for (int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if (j == fa[u] || j == son[u]) continue;
+        dfs2(j, j);
+    }
+    return;
+}
+
+void pushup(int u)
+{
+    tr[u].tmax = max(tr[u << 1].tmax, tr[u << 1 | 1].tmax);
+    return;
+}
+
+void pushdown(int u)
+{
+    auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
+    left.tmax += root.add, right.tmax += root.add;
+    left.add += root.add, right.add += root.add;
+    root.add = 0;
+}
+
+void build(int u, int l, int r)
+{
+    if (l == r) tr[u] = {l, r, nw[r], 0};
+    else
+    {
+        tr[u] = {l, r, 0, 0};
+        int mid = l + r >> 1;
+        build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
+        pushup(u);
+    }
+}
+
+void update(int u, int l, int r, int k)
+{
+    if (tr[u].l >= l && tr[u].r <= r) 
+    {
+        tr[u].tmax += k;
+        tr[u].add += k;
+        return;
+    }
+    pushdown(u);
+    int mid = tr[u].l + tr[u].r >> 1;
+    if (l <= mid) update(u << 1, l, r, k);
+    if (r > mid) update(u << 1 | 1, l, r, k);
+    pushup(u);
+    return;
+}
+
+int query(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r) return tr[u].tmax;
+    else
+    {
+        pushdown(u);
+        int mid = tr[u].l + tr[u].r >> 1;
+        if (r <= mid) return query(u << 1, l, r);
+        else if (l > mid) return query(u << 1 | 1, l, r);
+        else
+        {
+            int res = 0;
+            res = max(query(u << 1, l, r), query(u << 1 | 1, l, r));
+            return res;
+        }
+    }
+}
+
+void update_path(int u, int v, int k)
+{
+    while (top[u] != top[v])
+    {
+        if (depth[top[u]] < depth[top[v]]) swap(u, v);
+        update(1, id[top[u]], id[u], k);
+        u = fa[top[u]];
+    }
+    if (depth[u] < depth[v]) swap(u, v);
+    update(1, id[v], id[u], k);
+    return;
+}
+
+int query_path(int u, int v)
+{
+    int res = 0;
+    while (top[u] != top[v])
+    {
+        if (depth[top[u]] < depth[top[v]]) swap(u, v);
+        res = max(res, query(1, id[top[u]], id[u]));
+        u = fa[top[u]];
+    }
+    if (depth[u] < depth[v]) swap(u, v);
+    res = max(res, query(1, id[v], id[u]));
+    return res;
+}
+
+int main()
+{
+    memset(h, -1, sizeof(h));
+    cin >> n >> k;
+    
+    for (int i = 1; i < n; i ++)
+    {
+        int a, b;
+        cin >> a >> b;
+        add(a, b), add(b, a);
+    }
+    dfs1(1, -1, 1);
+    dfs2(1, 1);
+    
+    build(1, 1, n);
+    
+    while (k --)
+    {
+        int a, b;
+        cin >> a >> b;
+        update_path(a, b, 1);
+    }
+    
+    cout << query(1, 1, n) << endl;
+    
+    return 0;
+}
