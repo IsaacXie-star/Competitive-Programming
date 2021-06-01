@@ -1,0 +1,109 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200010;
+const LL INF = 1e18;
+
+struct Node
+{
+    int l, r;
+    LL val, tmax, add;
+} tr[N * 4];
+
+int n, k, q;
+
+void pushup(int u)
+{
+    tr[u].tmax = max(tr[u << 1].tmax, tr[u << 1 | 1].tmax);
+}
+
+void pushdown(int u)
+{
+    auto &root = tr[u], &left = tr[u << 1], &right = tr[u << 1 | 1];
+    if (root.add)
+    {
+        left.tmax += root.add, right.tmax += root.add;
+        left.add += root.add, right.add += root.add;
+        root.add = 0;
+    }
+}
+
+void build(int u, int l, int r)
+{
+    tr[u] = {l, r};
+    if (l == r)
+    {
+        tr[u].tmax = tr[u].val = 0, tr[u].add = 0;
+        return;
+    }
+    int mid = l + r >> 1;
+    build(u << 1, l, mid), build(u << 1 | 1, mid + 1, r);
+    pushup(u);
+}
+
+void update(int u, int l, int r, int d)
+{
+    if (tr[u].l >= l && tr[u].r <= r)
+    {
+        tr[u].tmax += d;
+        tr[u].add += d;
+        return;
+    }
+    pushdown(u);
+    int mid = tr[u].l + tr[u].r >> 1;
+    if (l <= mid) update(u << 1, l, r, d);
+    if (r > mid) update(u << 1 | 1, l, r, d);
+    pushup(u);
+}
+
+LL query(int u, int l, int r)
+{
+    if (tr[u].l >= l && tr[u].r <= r) return tr[u].tmax;
+    pushdown(u);
+    int mid = tr[u].l + tr[u].r >> 1;
+    if (r <= mid) return query(u << 1, l, r);
+    else if (l > mid) return query(u << 1 | 1, l, r);
+    else
+    {
+        LL res = -INF;
+        res = max(res, query(u << 1, l, r));
+        res = max(res, query(u << 1 | 1, l, r));
+        return res;
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin >> n >> k >> q;
+    build(1, 1, n);
+    
+    while (q --)
+    {
+        int op;
+        cin >> op;
+        if (op == 0)
+        {
+            int pos, v;
+            cin >> pos >> v;
+            pos ++;
+            update(1, max(0, (int)(pos - k + 1)), pos, v);
+        }
+        else
+        {
+            int l, r;
+            cin >> l >> r;
+            l ++, r ++;
+            cout << query(1, l, r) << endl;
+        }
+    }
+    
+    return 0;
+}
