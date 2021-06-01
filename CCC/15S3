@@ -1,0 +1,36 @@
+#include <iostream>
+#include <bitset>
+#include <set>
+#include <algorithm>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+set<int> port;
+
+int a,b,c,d;
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin>>a>>b;
+    
+    for(int i = 1; i<=a; i++) port.insert(-i);
+    
+    for(int i = 0; i<b; i++)
+    {
+        cin>>c;
+        auto x = port.lower_bound(-c);
+        
+        if(x == port.end())
+        {
+            cout<<i<<endl;
+            return 0;
+        }
+        port.erase(x);
+    }
+    cout<<b<<endl;
+    
+    return 0;
+}
