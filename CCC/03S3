@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+
+using namespace std;
+
+const int MAX_N = 25;
+
+char floorplan[MAX_N][MAX_N];
+
+int dx[4] = {1,0,-1,0}, dy[4] = {0,1,0,-1};
+
+int r,c;
+int n;
+
+int dfs(int x,int y, int area)
+{
+     int narea = area;
+    floorplan[x][y] = 'I';
+    for(int i = 0; i<4; i++)
+    {
+        int nx = x+dx[i], ny = y+dy[i];
+        if(0<= nx && nx< r && 0<= ny && ny<c && floorplan[nx][ny] == '.')
+        {
+
+            narea += dfs(nx,ny, 1);
+        }
+    }
+    return narea;
+}
+
+
+
+
+
+int main()
+{
+    vector<int> roomarea = {};
+
+  cin>>n;
+
+  cin>>r>>c;
+
+
+  for(int i = 0; i<r;i++)
+  {
+      string s;
+      cin>>s;
+      for(int j = 0; j<c; j++)
+      {
+          floorplan[i][j] = s[j];
+      }
+  }
+
+  for(int i = 0; i<r; i++)
+  {
+      for(int j = 0; j<c; j++)
+      {
+          if(floorplan[i][j] == '.')
+          {
+              roomarea.push_back(dfs(i,j,1));
+
+          }
+      }
+  }
+  sort(roomarea.begin(), roomarea.end(), greater<int> ());
+
+
+
+
+  int rooms = 0;
+
+  for(int i = 0; i<roomarea.size(); i++)
+  {
+      if(n < roomarea[i])
+      {
+          break;
+      }
+      else
+      {
+          n -= roomarea[i];
+          rooms++;
+      }
+  }
+
+  if(rooms==1)
+  {
+      cout<<rooms<<" room, "<<n<<" square metre(s) left over"<<endl;
+  }
+  else
+  {
+      cout<<rooms<<" rooms, "<<n<<" square metre(s) left over"<<endl;
+  }
+
+
+
+
+   return 0;
+   }
