@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+#include <array>
+// use cout<<fixed; to avoid outputing numbers in scientific notation way, setprecision(x) to set the numbers of digits after the decimal point
+// for stack, it is push(x), pop(x), top(x), for queue, it is push(x), pop(x), front(x)
+using namespace std;
+
+int gcd(int a, int b)
+{
+    int aa,bb;
+    aa = max(a,b);
+    bb = min(a,b);
+    if(bb == 0)
+    {
+        return aa;
+    }
+    else
+    {
+        return gcd(bb, aa%bb);
+    }
+}
+
+
+
+int main()
+{
+   int numerator, denominator;
+   cin>>numerator>>denominator;
+   if(numerator % denominator == 0)
+   {
+       cout<<numerator/denominator<<endl;
+   }
+   else
+   {
+       int tmp;
+       if(numerator > denominator)
+       {
+       tmp = numerator%denominator;
+       int gcdab = gcd(tmp, denominator);
+       cout<<numerator/denominator<<" "<<tmp/gcdab<<'/'<<denominator/gcdab<<endl;
+       }
+       else
+       {
+        
+           tmp = numerator%denominator;
+           int gcdab = gcd(tmp, denominator);
+           cout<<tmp/gcdab<<'/'<<denominator/gcdab<<endl;
+       }
+   }
+
+
+
+   return 0;
+   }
