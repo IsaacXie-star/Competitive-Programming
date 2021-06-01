@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+
+
+using namespace std;
+
+const int N = 2000010;
+
+bool vis[N];
+
+int cnt, primes[N];
+
+
+int main()
+{
+    for(int i = 2; i<=N; i++)
+    {
+        if(!vis[i]) primes[cnt++] = i;
+        for(int j = 0; primes[j] <= N / i; j++)
+        {
+            vis[primes[j] * i] = true;
+            if(i % primes[j] == 0)break;
+        }
+    }
+    cnt--;
+    
+
+    
+    
+    int t;
+    cin>>t;
+    int l = 0, r = cnt;
+    for(int i = 1; i<=t; i++)
+    {
+        int ni;
+        cin>>ni;
+        ni *= 2;
+        l = 0;
+        r = lower_bound(primes, primes + cnt, ni)-primes;
+        
+        while(l <= r)
+        {
+            while(primes[l] + primes[r] < ni) l++;
+            if(primes[l] + primes[r] == ni)
+            {
+                cout<<primes[l]<<' '<<primes[r]<<endl;
+                break;
+            }
+            while(primes[l] + primes[r] > ni) r--;
+            if(primes[l] + primes[r] == ni)
+            {
+                cout<<primes[l]<<' '<<primes[r]<<endl;
+                break;
+            }
+        }
+    }
+    
+    
+    return  0;
+}
