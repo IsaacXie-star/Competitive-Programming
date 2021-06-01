@@ -1,0 +1,123 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+
+const int MAX_N = 27;
+
+vector<pair<int,int> > edge;
+
+vector<int> G[MAX_N];
+
+vector<string> ans;
+
+int vis[MAX_N];
+
+bool dfs(int u,int v)
+{
+
+    for(int i = 0; i<G[u].size(); i++)
+    {
+
+
+        if(vis[G[u][i]] == 0)
+        {
+
+            vis[G[u][i]] = 1;
+
+           if(G[u][i] == v)
+            {
+                return true;
+            }
+           if(dfs(G[u][i], v))
+           {
+               return true;
+           }
+        }
+    }
+
+    return false;
+}
+
+
+
+int main()
+{
+    cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+
+    int cnt = 0;
+
+    string s;
+    while(cin>>s && s != "**")
+    {
+        char u,v;
+        u = s[0], v = s[1];
+        int uu,vv;
+        uu = u-'A'+1;
+        vv = v-'A'+1;
+        pair<int,int> p;
+        p = {uu,vv};
+        edge.push_back(p);
+    }
+
+    for(int i = 0; i<edge.size(); i++)
+    {
+        for(int j = 0; j<=26; j++)
+        {
+            G[j].clear();
+        }
+        memset(vis, 0, sizeof(vis));
+        vis[1] = 1;
+        for(int j = 0; j<edge.size(); j++)
+        {
+            if(i == j)
+            {
+                continue;
+            }
+            G[edge[j].first].push_back(edge[j].second);
+            G[edge[j].second].push_back(edge[j].first);
+        }
+
+        if(!dfs(1,2))
+        {
+            cnt++;
+            pair<int,int> p;
+            p = edge[i];
+            char x,y;
+            x = 'A'+ (p.first-1);
+            y = 'A' + (p.second-1);
+            string tmp = "";
+            tmp += x;
+            tmp+= y;
+            ans.push_back(tmp);
+        }
+    }
+
+    for(int i = 0; i<cnt;i++)
+    {
+        cout<<ans[i]<<endl;
+    }
+    cout<<"There are "<<cnt<<" disconnecting roads."<<endl;
+
+   return 0;
+   }
