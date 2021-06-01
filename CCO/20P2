@@ -1,0 +1,70 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200010;
+
+
+int n;
+int tr[N], b[N], d[N];
+vector<int> id[N];
+
+int lowbit(int x)
+{
+    return x & (-x);
+}
+
+void add(int x, int c)
+{
+    for(int i = x; i <= n; i += lowbit(i)) tr[i] += c;
+}
+
+LL sum(int x)
+{
+    LL res = 0;
+    for(int i = x; i; i -= lowbit(i)) res += tr[i];
+    return res;
+}
+
+int main()
+{
+    cin>>n;
+    for(int i = 1; i<=n; i++) cin>>d[i];
+    for(int i = 1; i<=n; i++)
+        id[d[i]].push_back(i);
+        
+    priority_queue<int> q;
+    bool flag = true;
+    for(int i = n; i >= 1; i--)
+    {
+        for(int j = 0; j < (int)id[i].size(); j++) q.push(id[i][j]);
+        if(q.empty())
+        {
+            flag = false;
+            break;
+        }
+        b[i] = q.top();
+        q.pop();
+    }
+     
+    if(!flag)
+    {
+        cout<<-1<<endl;
+        return 0;
+    }
+    LL ans = 0;
+    for(int i = 1; i<=n; i++)
+    {
+        ans += (LL)(sum(n) - (sum(b[i]-1)));
+        add(b[i], 1);
+    }
+    cout<<ans<<endl;
+    
+    return 0;
+}
