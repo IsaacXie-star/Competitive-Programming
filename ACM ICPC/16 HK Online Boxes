@@ -73,8 +73,7 @@ int main()
         //cout<<ans<<endl;
         
         set<int> check2;
-        // 快速判断一个节点是否在以另一个节点为根的子树里面,可以dfs,timestamp标记并且求出以每一个节点为根的子树大小
-        // 然后用dfn[u] < dfn[v] + trsize[v] 来判断u是否在以v为根的子树里面
+
         
         for(int j = 1; j <= q; j ++)
             for(int k = j + 1; k <= q; k ++)
