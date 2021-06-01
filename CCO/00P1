@@ -1,0 +1,92 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <set>
+#include <vector>
+
+using namespace std;
+
+typedef pair<int,int> PII;
+
+const int N = 30;
+
+int n;
+set<int> sets[N];
+vector<int> elms[N];
+vector<int> ans[N];
+vector<PII> set_relation;
+
+
+int main()
+{
+    cin>>n;
+    set<int> count_set;
+    vector<int> set_appears;
+    while(n --)
+    {
+        char x, y;
+        string t;
+        cin>>x>>t>>y;
+        if(!count_set.count(x - 'A'))
+        {
+            count_set.insert(x - 'A');
+            set_appears.push_back(x - 'A');
+        }
+        if(y >= 'A' && y <= 'Z')
+        {
+            PII p;
+            p = {(int)x - 'A', (int)y - 'A'};
+            set_relation.push_back(p);
+            if(!count_set.count(y - 'A'))
+            {
+                count_set.insert(y - 'A');
+                set_appears.push_back(y - 'A');
+            }
+        }
+        else
+        {
+            int X = x - 'A';
+            int Y = y - 'a';
+            elms[X].push_back(Y);
+            sets[X].insert(Y);
+        }
+    }
+    
+    for(int i = 0; i < 2; i ++)
+    {
+        for(int j = 0; j < set_relation.size(); j ++)
+        {
+            PII p;
+            p = set_relation[j];
+            int u = p.first, v = p.second;
+            for(int k = 0; k < elms[v].size(); k ++)
+            {
+                int e = elms[v][k];
+                if(!sets[u].count(e))
+                {
+                    sets[u].insert(e);
+                    elms[u].push_back(e);
+                }
+            }
+        }
+    }
+    
+    sort(set_appears.begin(), set_appears.end());
+    for(int i = 0; i < set_appears.size(); i ++)
+    {
+        int T = set_appears[i];
+        char S = T + 'A';
+        cout<<S<<" = {";
+        sort(elms[T].begin(), elms[T].end());
+        for(int j = 0; j < elms[T].size(); j ++)
+        {
+            int tt = elms[T][j];
+            char cc = tt + 'a';
+            if(j < elms[T].size() - 1) cout<<cc<<",";
+            else cout<<cc<<"}"<<endl;
+        }
+        if(elms[T].size() == 0) cout<<"}"<<endl;
+    }
+    
+    return 0;
+}
