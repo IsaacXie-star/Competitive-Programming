@@ -1,0 +1,105 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+const int N = 200010;
+
+int n, m, p, sz;
+char s[N], t[N];
+int sa[N], height[N], x[N], y[N], c[N], rk[N];
+int pre[N][26];
+int cnt[26];
+
+void get_sa()
+{
+    for(int i = 1; i <= n; i++) c[x[i] = (int)s[i]] ++;
+    for(int i = 2; i <= m; i++) c[i] += c[i-1];
+    for(int i = n; i >= 1; i--) sa[c[x[i]] --] = i;
+    
+    for(int k = 1; k <= n; k <<= 1)
+    {
+        int num = 0;
+        for(int i = n - k + 1; i <= n; i ++) y[++ num] = i;
+        for(int i = 1; i <= n; i ++)
+            if(sa[i] > k)
+                y[++ num] = sa[i] - k;
+        for(int i = 0; i <= m; i++) c[i] = 0;
+        for(int i = 1; i <= n; i++) c[x[i]] ++;
+        for(int i = 1; i <= m; i++) c[i] += c[i-1];
+        for(int i = n; i >= 1; i --) sa[c[x[y[i]]] --] = y[i], y[i] = 0;
+        swap(x, y);
+        x[sa[1]] = 1, num = 1;
+        for(int i = 2; i <= n; i ++)
+            x[sa[i]] = (y[sa[i]] == y[sa[i-1]] && y[sa[i] + k] == y[sa[i-1] + k]) ? num : ++ num;
+        if(num == n) break;
+        m = num;
+    }
+}
+
+void get_height()
+{
+    for(int i = 1; i <= n; i++) rk[sa[i]] = i;
+    for(int i = 1, k = 0; i <= n; i++)
+    {
+        if(rk[i] == 1) continue;
+        if(k) k --;
+        int j = sa[rk[i] - 1];
+        while(i + k <= n && j + k <= n && s[i + k] == s[j + k]) k++;
+        height[rk[i]] = k;
+    }
+}
+
+bool check(int l, int r)
+{
+    for(int i = 0; i < 26; i ++)
+    {
+        if(pre[r][i] - pre[l-1][i] != cnt[i]) return false;
+    }
+    return true;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    long long res = 0;
+    string ss, tt;
+    cin>>ss>>tt;
+    n = tt.size();
+    sz = ss.size();
+    for(int i = 1; i <= n; i++) s[i] = tt[i-1];
+    for(int i = 1; i <= sz; i ++) t[i] = ss[i-1];
+    m = 128;
+    
+    get_sa();
+    get_height();
+    
+    for(int i = 1; i <= sz; i ++) cnt[t[i] - 'a'] ++;
+    for(int i = 1; i <= n; i++)
+    {
+        int mp = s[i] - 'a';
+        pre[i][mp] ++;
+    }
+    for(int j = 0; j < 26; j ++)
+        for(int i = 1; i <= n; i++)
+        {
+            pre[i][j] += pre[i-1][j];
+        }
+        
+    for(int i = 1; i <= n; i++)
+    {
+        int a = sa[i];
+        if(a + sz - 1 > n) continue;
+        if(check(a, a + sz - 1))
+        {
+            if(height[i] < sz) res ++;
+        }
+    }
+    
+    cout<<res<<endl;
+    
+    return 0;
+}
