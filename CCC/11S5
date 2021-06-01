@@ -1,0 +1,90 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+const int N = 24, M = 1 << N;
+
+int n, t;
+short step[31280077];
+
+int turnoff(int u)
+{
+    int cnt = 0;
+    for(int i = 0; i <= 24; i++)
+    {
+        if(u & (1 << i)) cnt++;
+        else
+        {
+            if(cnt < 4) 
+            {
+                cnt = 0;
+                continue;
+            }
+            else
+            {
+                for(int k = i - cnt; k < i; k++)
+                {
+                    u -= (1 << k);
+                }
+                cnt = 0;
+            }
+        }
+    }
+    if(cnt>=4)
+    {
+    int i = 25;
+    for(int k = i - cnt; k < i; k++)
+    {
+        u -= (1 << k);
+    }
+    }
+    return u;
+}
+
+short bfs()
+{
+    queue<int> q;
+    q.push(t);
+    while(q.size())
+    {
+        int u = q.front();
+        q.pop();
+        if(u == 0) return step[0];
+        for(int i = 0; i<n; i++)
+        {
+            int x = u;
+            if(!(x & (1 << i)))
+            {
+                x += (1 << i);
+                x = turnoff(x);
+            }
+            if(step[x] == -1 || step[x] > step[u] + 1)
+            {
+                step[x] = step[u] + 1;
+                q.push(x);
+            }
+        }
+    }
+    return step[0];
+}
+
+int main()
+{
+    cin>>n;
+    for(int i = 0; i<n; i++)
+    {
+        int m;
+        cin>>m;
+        if(m) t += (1 << i);
+    }
+    memset(step, -1, sizeof(step));
+    step[t] = 0;
+    short ans = bfs();
+    
+    cout<<ans<<endl;
+    
+    return 0;
+}
