@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+
+ll n,m,s,t;
+
+const int maxn = 105;
+
+vector<int> G[maxn];
+
+ll selfval[maxn];
+
+bool vis[maxn];
+
+ll prevs[maxn];
+
+ll sum;
+
+void infect(int time)
+{
+
+   if(time == t)
+    {
+        for(int i = 0; i<n; i++)
+        {
+            sum += selfval[i];
+        }
+        return;
+    }
+    memset(vis,false,sizeof(vis));
+
+    memset(prevs, 0, sizeof(prevs));
+
+    for(int i = 0; i<n; i++)
+    {
+        if(selfval[i] > 0)
+        {
+            vis[i] = true;
+            prevs[i] = selfval[i];
+        }
+    }
+
+    for(int i = 0; i<n;i++)
+    {
+        if(selfval[i] > 0 && vis[i])
+        {
+            ll pass = prevs[i];
+            selfval[i] -= prevs[i];;
+            for(int j = 0; j<G[i].size(); j++)
+            {
+                int v = G[i][j];
+                selfval[v] += pass;
+            }
+        }
+    }
+    infect(time+1);
+}
+
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cout.tie(NULL);
+
+    cin>>n>>m>>s>>t;
+
+    for(int i = 0; i<m; i++)
+    {
+        int u,v;
+        cin>>u>>v;
+        G[v].push_back(u);
+        G[u].push_back(v);
+    }
+
+    selfval[s] = 1;
+
+    infect(0);
+    if(m == 0)
+    {
+        sum = 1;
+    }
+    cout<<sum<<endl;
+
+   return 0;
+   }
