@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+const int N = 1000010;
+
+int n, na, nb, nc, pn;
+string s;
+int prea[N * 2], preb[N * 2], prec[N * 2];
+
+int main()
+{
+    cin>>s;
+    pn = s.size();
+    s += s;
+    s = ' ' + s;
+    n = s.size();
+    for(int i = 1; i<n; i++)
+        if(s[i] == 'B') preb[i] ++, nb++;
+        else if(s[i] == 'A') prea[i] ++, na++;
+        else prec[i] ++, nc++;
+        
+    na /= 2, nb /= 2, nc /= 2;
+    
+    for(int i = 1; i<n; i++)
+    {
+        prea[i] += prea[i-1];
+        preb[i] += preb[i-1];
+        prec[i] += prec[i-1];
+    }
+
+    int ans = 2e9;
+
+    for(int i = 1; i<(pn+1); i++)
+    {
+        int a_b, b_a, a_c, c_a, b_c, c_b;
+        a_b = preb[i + na -1] - preb[i-1];
+        a_c = prec[i + na -1] - prec[i-1];
+        b_a = prea[i + na + nb -1] - prea[i + na -1];
+        b_c = prec[i + na + nb -1] - prec[i + na -1];
+        c_a = prea[i + na + nb + nc -1] - prea[i + na + nb -1];
+        c_b = preb[i + na + nb + nc -1] - preb[i + na + nb -1];
+        ans = min(ans, a_b + a_c + (b_a - min(b_a, a_b)) + b_c);
+        
+        c_a = prea[i + na + nc -1] - prea[i + na -1];
+        c_b = preb[i + na + nc -1] - preb[i + na -1];
+        b_a = prea[i + na + nb + nc -1] - prea[i + na + nc -1];
+        b_c = prec[i + na + nb + nc -1] - prec[i + na + nc -1];
+        ans = min(ans, a_b + a_c + (c_a - min(c_a, a_c)) + c_b);
+        
+    }
+    
+    cout<<ans<<endl;
+    
+    return 0;
+}
