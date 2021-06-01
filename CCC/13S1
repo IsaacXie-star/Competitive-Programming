@@ -1,0 +1,37 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <set>
+
+using namespace std;
+
+bool check(int x)
+{
+    set<int> S;
+    int cnt = 0;
+    while(x)
+    {
+        S.insert(x % 10);
+        x /= 10;
+        cnt++;
+    }
+    if(S.size() == cnt) return true;
+    else return false;
+}
+
+int main()
+{
+    int n;
+    cin>>n;
+    for(int i = n+1; i; i++)
+    {
+        if(check(i))
+        {
+            cout<<i<<endl;
+            break;
+        }
+    }
+    
+    
+    return 0;
+}
