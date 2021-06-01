@@ -1,0 +1,104 @@
+#include <iostream>
+#include <cmath>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+
+
+using namespace std;
+
+const int N = 1010;
+int n,m,nn;
+bool vis[N][N];
+char a[N][N];
+int ind[N][N], p[N*N];
+
+void init()
+{
+    for(int i = 0; i<=(n*m); i++)
+        p[i] = i;
+    
+    int idx = 1;
+    for(int i = 0; i<n; i++)
+        for(int j = 0; j<m; j++)
+            ind[i][j] = idx++;
+}
+
+int find(int x)
+{
+    if(p[x] != x) p[x] = find(p[x]);
+    
+    return p[x];
+}
+void unite(int x, int y)
+{
+    x = find(x), y = find(y);
+    
+    if(x == y) return ;
+    else
+    {
+        p[y] = x;
+        nn--;
+    }
+}
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin>>n>>m;
+    nn = n*m;
+    init();
+    
+    for(int i = 0; i<n; i++)
+    {
+        for(int j = 0; j<m; j++)
+        {
+            cin>>a[i][j];
+        }
+    }
+    
+    for(int i = 0; i<n; i++)
+    {
+        for(int j = 0; j<m; j++)
+        {
+            if(a[i][j] == 'N')
+            {
+                int nx = i-1, ny = j;
+                if(nx >= 0 && ny >= 0 && nx < n && ny < m)
+                {
+                    unite(ind[nx][ny], ind[i][j]);
+                }
+            }
+            else if(a[i][j] == 'S')
+            {
+                int nx = i+1, ny = j;
+                if(nx >= 0 && ny >= 0 && nx < n && ny < m)
+                {
+                    unite(ind[nx][ny], ind[i][j]);
+                }
+            }
+            else if(a[i][j] == 'E')
+            {
+                int nx = i, ny = j+1;
+                if(nx >= 0 && ny >= 0 && nx < n && ny < m)
+                {
+                    unite(ind[nx][ny], ind[i][j]);
+                }
+            }
+            else if(a[i][j] == 'W')
+            {
+                int nx = i, ny = j-1;
+                if(nx >= 0 && ny >= 0 && nx < n && ny < m)
+                {
+                    unite(ind[nx][ny], ind[i][j]);
+                }
+            }
+        }
+    }
+    cout<<nn<<endl;
+    
+    return 0;
+}
