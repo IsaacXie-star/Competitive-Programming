@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+
+using namespace std;
+
+
+int main()
+{
+  /*int a,b,c,d;
+  int cot = 1;
+  while(cin>>a>>b>>c>>d)
+  {
+      if(a == -1 && b == -1 && c== -1 && d == -1)
+      {
+          break;
+      }
+      else
+      {
+          int ans = 0;
+          if(a >= 23)
+          {
+              a = a%23;
+          }
+          if(b >= 28)
+          {
+              b = b%28;
+          }
+          if(c >= 33)
+          {
+              c = c%33;
+          }
+          int k,j;
+          k = max(a,b);
+          j = max(k,c);
+          for(int i = j; i<= 24618; i++)
+          {
+              if(((i-a)%23 == 0) && ((i-b)%28 == 0) && ((i-c)%33 == 0) && i>d )
+              {
+                  ans = i - d;
+                  break;
+              }
+          }
+
+         cout<<"Case "<<cot<<": the next triple peak occurs in "<<ans<<" days."<<endl;
+      }
+      cot++;
+  }*/
+int n;
+cin>>n;
+vector<char> qans = {};
+vector<char> sans = {};
+int ans =0;
+for(int i = 0; i<n; i++)
+{
+    char x;
+    cin>>x;
+    qans.push_back(x);
+}
+for(int j = 0; j<n; j++)
+{
+    char y;
+    cin>>y;
+    sans.push_back(y);
+}
+for(int k = 0; k<n; k++)
+{
+    if(qans[k] == sans[k])
+    {
+        ans++;
+    }
+}
+cout<<ans<<endl;
+
+
+ return 0;
+}
