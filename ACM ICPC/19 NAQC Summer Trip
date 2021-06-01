@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 100010;
+
+int n;
+char s[N];
+int presum[26][N];
+
+int main()
+{
+    string tmp;
+    cin>>tmp;
+    n = tmp.size();
+    for(int i = 1; i <= n; i ++) s[i] = tmp[i - 1], presum[s[i] - 'a'][i] ++;
+    for(int i = 0; i < 26; i ++)
+        for(int j = 1; j <= n; j ++)
+            presum[i][j] += presum[i][j - 1];
+    
+    
+    LL ans = 0;
+    for(int i = 0; i < 26; i ++)
+        for(int j = 0; j < 26; j ++)
+            if(i != j)
+            {
+                char a, b;
+                a = 'a' + i, b = 'a' + j;
+                int prev = 0;
+                for(int k = 1; k <= n; k ++)
+                    if(s[k] == b && presum[a - 'a'][k] - presum[a - 'a'][prev] > 0)
+                    {
+                        ans ++;
+                        prev = k;
+                    }
+            }
+    
+    cout<<ans<<endl;
+    
+    return 0;
+}
