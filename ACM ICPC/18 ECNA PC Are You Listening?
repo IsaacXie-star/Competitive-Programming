@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+
+
+using namespace std;
+
+int main()
+{
+ double cx,cy;
+  int n;
+  cin>>cx>>cy>>n;
+  vector<double> r = {};
+  for(int i = 0; i<n; i++)
+  {
+      double x,y,rp;
+      cin>>x>>y>>rp;
+      double d = sqrt((x-cx)*(x-cx)+ (y-cy)*(y-cy));
+      double ravalible = d-rp;
+      r.push_back(ravalible);
+  }
+  sort(r.begin(),r.end());
+  if(r[2] <= 0)
+  {
+      cout<<0<<endl;
+  }
+  else
+  {
+      cout<<(int) (r[2])<<endl;
+  }
+
+
+ return 0;
+}
