@@ -1,0 +1,94 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 15;
+
+int a[N][N];
+
+string b[N][N];
+
+
+int main()
+{
+    for(int i = 0; i<10; i++)
+        for(int j = 0; j<9; j++)
+            cin>>b[i][j];
+            
+    for(int i = 0; i<10; i++)
+        for(int j = 0; j<9; j++)
+        {
+            if(isdigit(b[i][j][0]))
+            {
+                int k = stoi(b[i][j]);
+                a[i][j] = k;
+            }
+            else
+            {
+                a[i][j] = -1;
+            }
+        }
+  
+  
+    bool flag = true;
+    
+    while(flag)
+    {
+        flag = false;
+        
+        for(int i = 0; i<10; i++)
+            for(int j = 0; j<9; j++)
+            {
+                string s = b[i][j];
+                if(!isdigit(s[0]))
+                {
+                    int sum = 0;
+                    bool sflag = true;
+                    for(int k = 0; k<s.size(); k += 3)
+                    {
+                        int t = k+1;
+                        int r = s[k] - 'A', l = s[t] - '1'; 
+                        string ss = b[r][l];
+                        if(!isdigit(ss[0]))
+                        {
+                            sflag = false;
+                            break;
+                        }
+                        int x = stoi(ss);
+                        sum += x;
+                    }
+                    if(sflag)
+                    {
+                        flag = true;
+                        a[i][j] = sum;
+                        b[i][j] = to_string(sum);
+                    }
+                    
+                }
+                
+            }
+        
+    }
+    
+    for(int i = 0; i<10; i++)
+    {
+        for(int j = 0; j<9; j++)
+        {
+            if(a[i][j] == -1)
+            {
+                cout<<"*"<<" ";
+            }
+            else cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+
+    
+    return 0;
+}
