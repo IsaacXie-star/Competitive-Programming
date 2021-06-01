@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+
+using namespace std;
+
+const int N = 110;
+
+int n;
+
+bool vis[N];
+int ne[N], e[N], h[N], idx;
+
+void add(int a, int b)
+{
+    ne[idx] = h[a], e[idx] = b, h[a] = idx++;
+}
+
+
+
+int gcd(int a, int b)
+{
+    return b? gcd(b , a%b) : a;
+}
+
+int lcm(int a, int b)
+{
+    return (a*b) / gcd(a,b);
+}
+
+int dfs(int u)
+{
+    if(vis[u]) return 0;
+    vis[u] = true;
+    return dfs(e[h[u]]) + 1;
+}
+
+
+int main()
+{
+    while(cin>>n, n)
+    {
+        memset(h, -1, sizeof(h));
+        memset(vis, false, sizeof(vis));
+        
+        for(int i = 0; i<n; i++)
+        {
+            int a,b;
+            cin>>a>>b;
+            add(a,b);
+        }
+        
+        int ans = 1;
+        for(int i = 1; i<=n; i++)
+        {
+            if(!vis[i])
+            {
+                int t = dfs(i);
+                ans = lcm(ans, t);
+            }
+        }
+        cout<<ans<<endl;
+    }
+    
+    
+    return 0;
+}
