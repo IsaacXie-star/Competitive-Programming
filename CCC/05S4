@@ -1,0 +1,109 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+#include <unordered_map>
+#include <set>
+#include <cmath>
+
+
+using namespace std;
+
+const int N = 110, M = 2*N;
+
+int h[N], ne[M], e[M], idx; 
+
+bool vis[N];
+
+void init()
+{
+    memset(h, -1, sizeof(h));
+    memset(ne, 0, sizeof(ne));
+    memset(e, 0, sizeof(e));
+    memset(vis, false, sizeof(vis));
+    idx = 0;
+}
+
+void add(int a, int b)
+{
+    ne[idx] = h[a], e[idx] = b, h[a] = idx++;
+}
+
+int dfs(int u)
+{
+    int height = 0;
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!vis[j])
+        {
+            vis[j] = true;
+            height = max(height, dfs(j)+1);
+        }
+    }
+    
+    return height;
+}
+
+
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int t;
+    cin>>t;
+    int cnt = 1;
+    while(t --)
+    {
+        cnt = 1;
+        init();
+        unordered_map<string,int> mp;
+        set<pair<int,int> > check;
+        int n,a,b,here;
+        cin>>n;
+        vector<string> vct = {};
+        for(int i = 0; i<n; i++)
+        {
+            string s;
+            cin>>s;
+            vct.emplace_back(s);
+        }
+        for(int i = 0; i<n-1; i++)
+        {
+            int j = i+1;
+            string s1 = vct[i], s2 = vct[j];
+            if(mp.find(s1) == mp.end()) mp[s1] = cnt++;
+            if(mp.find(s2) == mp.end()) mp[s2] = cnt++;
+            
+            a = mp[s1], b = mp[s2];
+            pair<int,int> p1,p2;
+            p1 = {a,b}, p2 = {b,a};
+            if(!check.count(p1))
+            {
+                add(a,b);
+                check.insert(p1);
+            }
+            if(!check.count(p2))
+            {
+                add(b,a);
+                check.insert(p2);
+            }
+            if(i == n-2) here = mp[s2];
+        }
+        
+        vis[here] = true;
+        int tmp = dfs(here);
+        
+        int ans = 10*n - 10*(2*tmp);
+        
+        cout<<ans<<endl;
+    }
+   
+    
+    
+    return 0;
+}
