@@ -1,0 +1,54 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+typedef long long LL;
+
+vector<vector<int> > G;
+
+int n, b;
+
+void dfs(int size)
+{
+    if(size == 1) return ;
+    int subsize = (2 * size + 2) / 3;
+    if(size == 2) subsize = 1;
+    dfs(subsize);
+    for(int i = 1; i + size -1 <= n; i++)
+        for(int j = 0; j < G[i].size(); j++)
+        {
+            G[i][j] = max({G[i][j], G[i+size-subsize][j], G[i+size-subsize][j+size-subsize]});
+        }
+    return ; 
+}
+
+
+int main()
+{
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin>>n>>b;
+    G.resize(n+2);
+    for(int i = 1; i <= n; i++)
+        for(int j = 1; j <= i; j++)
+        {
+            int x;
+            cin>>x;
+            G[i].emplace_back(x);
+        }
+    dfs(b);
+    LL res = 0;
+    
+    for(int i = 1; i + b -1 <= n; i++)
+        for(int j = 0; j < G[i].size(); j++)
+            res += G[i][j];
+            
+    cout<<res<<endl;
+    
+    return 0;
+}
