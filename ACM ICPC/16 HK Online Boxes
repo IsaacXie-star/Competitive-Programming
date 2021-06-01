@@ -1,0 +1,105 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <set>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 200010, M = 25;
+
+int n, m;
+int a[N];
+int h[N], ne[N], e[N], idx;
+LL trsize[N], timestamp, dfn[N], din[N];
+int querys[M];
+
+void add(int a, int b)
+{
+    ne[idx] = h[a], e[idx] = b, h[a] = idx ++;
+}
+
+void dfs(int u)
+{
+    dfn[u] = ++ timestamp;
+    trsize[u] = 1;
+    for(int i = h[u]; i != -1; i = ne[i])
+    {
+        int j = e[i];
+        if(!dfn[j])
+        {
+            dfs(j);
+            trsize[u] += trsize[j];
+        }
+    }
+    return;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    memset(h, -1, sizeof(h));
+    cin>>n;
+    for(int i = 1; i <= n; i ++) cin>>a[i];
+    for(int i = 1; i <= n; i ++)
+        if(a[i])
+            add(a[i], i), din[i] ++;
+            
+    for(int i = 1; i <= n; i ++)
+        if(!din[i])
+            dfs(i);
+
+    cin>>m;
+    for(int i = 1; i <= m; i ++)
+    {
+        int q;
+        cin>>q;
+        LL ans = 0;
+        set<int> check1;
+        for(int j = 1; j <= q; j ++) 
+        {
+            cin>>querys[j];
+            if(!check1.count(querys[j])) ans += trsize[querys[j]], check1.insert(querys[j]);
+            else
+            {
+                j --;
+                q --;
+            }
+        }
+        
+        //cout<<ans<<endl;
+        
+        set<int> check2;
+        // 快速判断一个节点是否在以另一个节点为根的子树里面,可以dfs,timestamp标记并且求出以每一个节点为根的子树大小
+        // 然后用dfn[u] < dfn[v] + trsize[v] 来判断u是否在以v为根的子树里面
+        
+        for(int j = 1; j <= q; j ++)
+            for(int k = j + 1; k <= q; k ++)
+            {
+                if(dfn[querys[j]] < dfn[querys[k]])
+                {
+                    if(dfn[querys[k]] < dfn[querys[j]] + trsize[querys[j]] && !check2.count(querys[k]))
+                    {
+                        ans -= trsize[querys[k]];
+                        check2.insert(querys[k]);
+                    }
+                }
+                else
+                {
+                    if(dfn[querys[j]] < dfn[querys[k]] + trsize[querys[k]] && !check2.count(querys[j]))
+                    {
+                        ans -= trsize[querys[j]];
+                        check2.insert(querys[j]);
+                    }
+                }
+               // cout<<querys[j]<<"  "<<querys[k]<<" --> "<<ans<<endl;
+            }
+        
+        cout<<ans<<endl;
+    }
+    
+    return 0;
+}
