@@ -1,0 +1,93 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <limits.h>
+
+using namespace std;
+
+#define x first
+#define y second
+
+typedef long long LL;
+typedef pair<LL, LL> PLL;
+
+const int N = 510, M = N * N * 2;
+const LL INF = 1e16;
+
+int n, m, t, d;
+int station[N];
+LL f[N][N];
+int h[N], ne[M], e[M], idx;
+LL w[M]; 
+LL dist[N];
+
+void add(int a, int b, int c)
+{
+    ne[idx] = h[a], e[idx] = b, w[idx] = c, h[a] = idx ++;
+}
+
+void dijkstra(int root)
+{
+    for (int i = 0; i <= n; i ++) dist[i] = INF;
+    dist[root] = 0;
+    priority_queue<PLL, vector<PLL>, greater<PLL> > heap;
+    heap.push({0, root});
+    while (heap.size())
+    {
+        auto t = heap.top();
+        heap.pop();
+        int u = t.y, dis = t.x;
+        for (int i = h[u]; i != -1; i = ne[i])
+        {
+            int j = e[i];
+            if (dist[j] > dist[u] + w[i] && w[i] <= d)
+            {
+                dist[j] = dist[u] + w[i];
+                heap.push({dist[j], j});
+            }
+        }
+    }
+}
+
+int main()
+{
+    memset(h, -1, sizeof(h));
+    cin >> n >> m >> t >> d;
+    for (int i = 1; i <= t; i ++) cin >> station[i];
+    
+    for (int i = 1; i <= n; i ++)
+        for (int j = 1; j <= n; j ++)
+            f[i][j] = INF;
+    
+    for (int i = 1; i <= m; i ++)
+    {
+        int a, b, k;
+        cin >> a >> b >> k;
+        f[a][b] = f[b][a] = k;
+    }
+    for (int i = 1; i <= n; i ++) f[i][i] = 0;
+    for (int k = 1; k <= n; k ++)
+        for (int i = 1; i <= n; i ++)
+            for (int j = 1; j <= n; j ++)
+                f[i][j] = min(f[i][j], f[i][k] + f[k][j]);
+    
+    if (f[1][n] <= d) cout << f[1][n] << endl;
+    else
+    {
+        for (int i = 1; i <= t; i ++) add(1, station[i], f[1][station[i]]),add(station[i], 1, f[1][station[i]]);
+        for (int i = 1; i <= t; i ++) add(station[i], n, f[n][station[i]]);
+        for (int i = 1; i <= t; i ++)
+            for (int j = i + 1; j <= t; j ++)
+            {
+                int u = station[i], v = station[j];
+                add(u, v, f[u][v]), add(v, u, f[u][v]);
+            }
+        dijkstra(1);
+        if (dist[n] == INF) cout << "stuck" << endl;
+        else cout << dist[n] << endl;
+    }
+    
+    return 0;
+}
