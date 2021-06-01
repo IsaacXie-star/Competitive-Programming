@@ -1,0 +1,96 @@
+#include <iostream>
+#include <cmath>
+#include <algorithm>
+#include <cstring>
+#include <set>
+
+using namespace std;
+
+vector<int> s;
+
+const int N = 110;
+int a[N][N], m,n, dx[4] = {1,0,-1,0}, dy[4] = {0,-1,0,1};
+
+bool vis[N][N];
+
+bool findd(int b)
+{
+    for(int i = 0; i<3; i++)
+        if(s[i] == b) return true;
+        
+    
+    return false;
+}
+
+bool dfs(int x, int y)
+{
+    vis[x][y] = true;
+    if(x == m-1) return true;
+    if(!findd(a[x][y])) return false;
+    for(int i = 0; i<4; i++)
+    {
+        int nx = x + dx[i], ny = y + dy[i];
+        if(nx >= 0 && nx < m && ny >= 0 && ny < n && !vis[nx][ny] && findd(a[nx][ny]))
+        {
+            if(dfs(nx, ny))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void output()
+{
+    for(int i = 0; i<3; i++)
+    {
+        cout<<s[i]<<" ";
+    }
+}
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin>>n>>m;
+    for(int i = 0; i<m; i++)
+        for(int j = 0; j<n; j++)
+            cin>>a[i][j];
+    
+    for(int i = 0; i<=9; i++)
+    {
+        s.push_back(i);
+        for(int j = 0; j<=9; j++)
+        {
+            s.push_back(j);
+            for(int k = 0; k<=9; k++)
+            {
+                s.push_back(k);
+                
+            
+                for(int z = 0; z<n; z++)
+                {
+                    memset(vis, false, sizeof(vis));
+                    if(dfs(0,z))
+                    {
+                        output();
+                        return 0;
+                    }
+                }
+                
+                s.pop_back();
+            }
+            s.pop_back();
+        }
+        s.pop_back();
+    }
+    
+    
+    
+    cout<<"-1 -1 -1"<<endl;
+
+    return 0;
+}
