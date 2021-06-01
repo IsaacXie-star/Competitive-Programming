@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+#include <cmath>>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+
+using namespace std;
+
+
+int main()
+{
+   long long n;
+   cin>>n;
+   vector<vector<long long>> boxava = {};
+   for(int i = 0; i<n; i++)
+   {
+       vector<long long> boxdim = {};
+       long long l,w,h;
+       cin>>l>>w>>h;
+       boxdim.push_back(l);
+       boxdim.push_back(w);
+       boxdim.push_back(h);
+       sort(boxdim.begin(), boxdim.end());
+       boxava.push_back(boxdim);
+   }
+   int m;
+   cin>>m;
+   for(int i = 0; i<m;i++)
+   {
+       vector<long long> pack = {};
+       vector<long long> volumn = {};
+       int pl,pw,ph;
+       cin>>pl>>pw>>ph;
+       pack.push_back(pl);
+       pack.push_back(pw);
+       pack.push_back(ph);
+       sort(pack.begin(),pack.end());
+       for(int j = 0; j<n; j++)
+       {
+           bool fit = true;
+           for(int k = 0; k<3; k++)
+           {
+               if(boxava[j][k] < pack[k])
+               {
+                   fit = false;
+                   break;
+               }
+           }
+           if(fit == true)
+           {
+               long long dimension;
+               dimension = boxava[j][0] * boxava[j][1] * boxava[j][2];
+               volumn.push_back(dimension);
+           }
+       }
+       sort(volumn.begin(),volumn.end());
+       if(volumn.empty())
+       {
+           cout<<"Item does not fit."<<endl;
+       }
+       else
+       {
+           cout<<volumn[0]<<endl;
+       }
+       
+       
+   }
+   
+    return 0;
+}
