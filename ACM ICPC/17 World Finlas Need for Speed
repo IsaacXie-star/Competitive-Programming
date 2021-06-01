@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+
+const int maxn = 1005;
+
+long double dis[maxn];
+
+long double si[maxn];
+
+const long double esp = 1e-9;
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cout.tie(NULL);
+    cout<<fixed<<setprecision(9);
+   int n;
+   long double t;
+
+   cin>>n;
+   cin>>t;
+    long double l,r;
+    r = 20000000;
+    l = 10000000;
+    for(int i = 0; i<n; i++)
+    {
+        cin>>dis[i];
+        cin>>si[i];
+        l = min(l,si[i]);
+    }
+     l *= -1;
+    while(r-l > esp)
+    {
+        long double sum = 0;
+        long double mid = (l+r)/2.0;
+        bool flag = true;
+        for(int i = 0; i<n; i++)
+        {
+            sum += (dis[i])/(mid+si[i]);
+            if(mid+si[i] <= 0)
+            {
+                l = mid;
+                flag = false;
+                break;
+
+            }
+        }
+       if(flag)
+       {
+
+        if(sum > t || sum <= 0)
+        {
+            l = mid;
+        }
+        else if(sum <= t)
+        {
+            r = mid;
+        }
+       }
+    }
+    cout<<(l+r)/2.0<<endl;
+
+   
+
+   return 0;
+   }
