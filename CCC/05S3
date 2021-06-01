@@ -1,0 +1,121 @@
+#include <cstring>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+
+
+using namespace std;
+
+int n;
+typedef vector<vector<int> > vvi;
+
+vvi ans;
+
+vvi tensp(vvi vca, vvi vcb)
+{
+    int numra = vca.size(), numrb = vcb.size();
+    vvi product = {};
+    for(int i = 0; i<numra; i++)
+    {
+        vector<int> rowa = vca[i];
+        for(int j = 0; j<numrb; j++)
+        {
+            vector<int> rowb = vcb[j];
+            vector<int> nrow = {};
+            int lrowa = rowa.size(), lrowb = rowb.size();
+            for(int k = 0; k<lrowa; k++)
+            {
+                int aij = rowa[k];
+                for(int z = 0; z<lrowb; z++)
+                {
+                    int bij = rowb[z];
+                    int res = aij*bij;
+                    nrow.push_back(res);
+                }
+            }
+            product.push_back(nrow);
+        }
+    }
+
+   return product; 
+}
+
+void getans(vvi v)
+{
+    int maxx = v[0][0], minn = v[0][0], maxrs = 0, minrs = 0, maxcs = 0, mincs = 0;
+    vector<int> tmp = v[0];
+    for(int i = 0; i<(int)tmp.size(); i++)
+    {
+        maxrs += tmp[i];
+        minrs += tmp[i];
+    }
+    int t = tmp.size();
+    for(int i = 0; i<(int)v.size(); i++)
+    {
+        maxcs += v[i][0];
+        mincs += v[i][0];
+    }
+    for(int i = 0; i<(int)v.size(); i++)
+    {
+        vector<int> vc = v[i];
+        int sumr = 0;
+        for(int j = 0; j<(int)vc.size(); j++)
+        {
+            int vij = vc[j];
+            maxx = max(maxx, vij), minn = min(minn, vij);
+            sumr += vij;
+        }
+        maxrs = max(maxrs, sumr);
+        minrs = min(minrs, sumr);
+    }
+    for(int i = 0; i<t; i++)
+    {
+        int sumc = 0;
+        for(int j = 0; j<v.size(); j++)
+        {
+            sumc += v[j][i];
+        }
+        maxcs = max(maxcs, sumc);
+        mincs = min(mincs, sumc);
+    }
+    
+    cout<<maxx<<endl;
+    cout<<minn<<endl;
+    cout<<maxrs<<endl;
+    cout<<minrs<<endl;
+    cout<<maxcs<<endl;
+    cout<<mincs<<endl;
+}
+
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    cin>>n;
+    ans = {{1}};
+    while(n --)
+    {
+        vvi vc = {};
+        int r,c;
+        cin>>r>>c;
+        for(int i = 0; i<r; i++)
+        {
+            vector<int> v = {};
+            int x;
+            for(int j = 0; j<c; j++)
+            {
+                cin>>x;
+                v.push_back(x);
+            }
+            vc.push_back(v);
+        }
+        ans = tensp(ans, vc);
+    }
+    
+    getans(ans);
+    
+    return 0;
+}
