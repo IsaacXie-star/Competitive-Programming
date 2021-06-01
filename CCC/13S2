@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+typedef long long LL;
+
+const int N = 100010;
+
+int n,m;
+LL w[N];
+
+int main()
+{
+    cin>>m>>n;
+    for(int i = 1; i<=n; i++) cin>>w[i];
+    for(int i = 1; i<=n; i++) w[i] += w[i-1];
+    
+    int cnt = 0;
+    for(int i = 1; i<= n; i++)
+    {
+        int j = max(0, i-4);
+        if((w[i] - w[j]) <= m) cnt = i;
+        else break;
+    }
+    cout<<cnt<<endl;
+    
+    
+    return 0;
+}
