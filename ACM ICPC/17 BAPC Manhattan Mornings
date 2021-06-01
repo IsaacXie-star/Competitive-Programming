@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+long long dp[100005];
+
+const long long INF = 100000000000;
+
+int main()
+{
+  long long n;
+   cin>>n;
+   long long xh,yh,xw,yw;
+   cin>>xh>>yh>>xw>>yw;
+   int m;
+   m = ((xw<xh&&yw>yh)||(xw>xh&&yw<yh)) ? -1 : 1 ;
+   yh*= m;
+   yw*=m;
+
+   vector<pair<long long,long long>> location= {};
+   for(int i = 0; i<n; i++)
+   {
+       pair<long long,long long> p;
+       long long x,y;
+       cin>>x>>y;
+       y *= m;
+       if(x >max(xh,xw) || x < min(xh,xw) || y > max(yh,yw) || y<min(yh,yw))
+       {
+           continue;
+       }
+       else
+       {
+           p = {x,y};
+           location.push_back(p);
+       }
+   }
+
+
+
+   sort(location.begin(),location.end());
+   vector<long long> ycord = {};
+   n = location.size();
+
+
+   for(int i = 0; i<n; i++)
+   {
+      ycord.push_back(location[i].second);
+   }
+   long long res;
+
+   fill(dp,dp+n, INF);
+
+   for(int i = 0; i<n; i++)
+   {
+       *upper_bound(dp,dp+n, ycord[i]) = ycord[i];
+   }
+   res = lower_bound(dp,dp+n, INF) - dp;
+   cout<<res<<endl;
+
+   return 0;
+   }
