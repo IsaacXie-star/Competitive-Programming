@@ -1,0 +1,82 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+//#include <array>
+#include <stdio.h>
+#include <map>
+
+using namespace std;
+
+bool can[405][405];
+int a[405];
+
+int main()
+{
+    cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+
+   int n;
+   cin>>n;
+   int ans = 0;
+   for(int i = 1; i<=n; i++)
+   {
+       int k;
+       cin>>k;
+       a[i] = a[i-1]+k;
+   }
+   
+   for(int i = 1; i<=n; i++)
+   {
+       can[i][i] = true;
+       can[i][i-1] = true;
+   }
+
+   for(int len = 2; len<=n; len++)
+   {
+       for(int i = 1; i+len-1<=n; i++)
+       {
+           int j = i+len-1;
+           int k = i, l = j;
+           for(k; k<=j; k++)
+           {
+               while(a[k] - a[i-1] > a[j]-a[l-1] && l >= k)
+               {
+                   l--;
+               }
+                   if(can[i][k] && can[k+1][l-1] && can[l][j] && (a[j]-a[l-1] == a[k]-a[i-1]))
+                   {
+                       can[i][j] = true;
+                   }
+               
+           }
+       }
+   }
+
+   for(int len = 1; len<=n; len++)
+   {
+       for(int i = 1; i+len-1<=n; i++)
+       {
+           int j = i+len-1;
+           if(can[i][j])
+           {
+               ans = max(ans, a[j]-a[i-1]);
+           }
+       }
+   }
+
+   cout<<ans<<endl;
+   return 0;
+   }
