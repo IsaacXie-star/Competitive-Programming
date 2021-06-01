@@ -1,0 +1,78 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+const int N = 20;
+
+int s, e;
+int a[N][N];
+
+
+int main()
+{
+    cin>>s>>e;
+    int t = s;
+    int lb, rb, ub, db;
+    int x = 10, y = 10;
+    a[x][y] = t;
+    lb = 10, rb = 10, ub = 10, db = 10;
+    int k = 1, step = 0;
+    while(t < e)
+    {
+        step = 0;
+        while(t < e && step < k)
+        {
+            x++;
+            a[x][y] = ++t;
+            step++;
+            lb = min(lb, y), rb = max(rb, y);
+            ub = min(ub, x), db = max(db, x);
+        }
+        step = 0;
+        while(t < e && step < k)
+        {
+            y++;
+            a[x][y] = ++t;
+            step++;
+            lb = min(lb, y), rb = max(rb, y);
+            ub = min(ub, x), db = max(db, x);
+        }
+        k++;
+        step = 0;
+        while(t < e && step < k)
+        {
+            x--;
+            a[x][y] = ++t;
+            step++;
+            lb = min(lb, y), rb = max(rb, y);
+            ub = min(ub, x), db = max(db, x);
+        }
+        step = 0;
+        while(t < e && step < k)
+        {
+            y--;
+            a[x][y] = ++t;
+            step++;
+            lb = min(lb, y), rb = max(rb, y);
+            ub = min(ub, x), db = max(db, x);
+        }
+        k++;
+    }
+    
+    for(int i = ub; i <= db; i++)
+    {
+        for(int j = lb; j <= rb; j++)
+        {
+            if(a[i][j]) cout<<a[i][j]<<' ';
+            else cout<<" "<<' ';
+        }
+        cout<<endl;
+    }
+    
+    
+    
+    return 0;
+}
+
