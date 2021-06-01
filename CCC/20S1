@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+#include <set>
+#include <math.h>
+#include <stdlib.h>
+#include <cctype>
+#include <queue>
+#include <bitset>
+#include <array>
+
+using namespace std;
+
+int main()
+{
+    cout<<fixed;
+    int n;
+    cin>>n;
+    vector<pair<long double,long double>> data = {};
+    for(int i= 0; i<n; i++)
+    {
+        long double t,position;
+        cin>>t>>position;
+        pair<long double,long double> tp;
+        tp.first = t;
+        tp.second = position;
+        data.push_back(tp);
+    }
+    sort(data.begin(),data.end());
+    long double maxspeed = -1;
+    for(int j = 1; j<n; j++)
+    {
+        long double deltat, deltap;
+        deltat = data[j].first - data[j-1].first;
+        deltap = max(data[j].second, data[j-1].second) - min(data[j].second,data[j-1].second);
+        long double speed = deltap*1.0/deltat;
+        if(speed>=  maxspeed)
+        {
+            maxspeed = speed;
+        }
+    }
+    cout<<maxspeed<<endl;
+
+   return 0;
+   }
