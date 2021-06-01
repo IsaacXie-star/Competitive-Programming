@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+const int N = 11, M = 1 << N;
+
+
+
+char b[N];
+
+int step[M];
+
+int s;
+
+int bfs()
+{
+    queue<int> q;
+    q.push(0);
+    
+    //cout<<"----"  <<s<<endl;
+    int cnt = 0;
+    
+    while(q.size())
+    {
+        int t = q.front();
+        q.pop();
+        if(t == s)
+        {
+            //cout<<"-----  "<<t<<"  "<<s<<"   "<<step[s]<<endl;
+            return step[s];
+        }
+        
+        int x = t;
+        for(int i = 0; i<9; i++)
+        {
+            x = t;
+            x ^= (1 << i);
+            //cout<<x<<endl;
+            if(i + 3 < 9) x ^= (1 << (i + 3));
+            if(i - 3 >= 0) x ^= (1 << (i - 3));
+            if(((i-1)+3) % 3 != 2) x ^= (1 << (i - 1));
+            if((i+1) % 3 != 0) x ^= (1 << (i + 1));
+            if(step[x] == -1)
+            {
+                step[x] = step[t] + 1;
+                q.push(x);
+            }
+        }
+        
+    }
+    return 0;
+    
+}
+
+int main()
+{
+    int p;
+    cin>>p;
+    while(p --)
+    {
+        memset(step, -1, sizeof(step));
+        step[0] = 0;
+        s = 0;
+        for(int i = 0; i<9; i++) cin>>b[i];
+                
+        for(int i = 0; i<9; i++)
+        {
+            if(b[i] == '*') s += (1 << i);
+        }
+        
+        cout<<bfs()<<endl;
+    }
+    
+    
+    
+    
+    return 0;
+}
