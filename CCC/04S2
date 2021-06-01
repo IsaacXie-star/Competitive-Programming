@@ -1,0 +1,54 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+int n,k;
+const int N = 110;
+
+int score[N], wrank[N];
+
+int main()
+{
+    cin>>n>>k;
+    int maxs = -100000000;
+    while(k --)
+    {
+        for(int i = 1; i<=n; i++)
+        {
+            int t;
+            cin>>t;
+            score[i] += t;
+        }
+        if(k == 0)
+        {
+            for(int i = 1; i<=n; i++) maxs = max(maxs, score[i]);
+        }
+        
+        
+            
+        for(int i = 1; i<=n; i++)
+        {
+            int k = score[i];
+            int cnt = 1;
+            for(int j = 1; j<=n; j++)
+            {
+                if(j != i && score[j] > k) cnt++;
+            }
+            wrank[i] = max(wrank[i], cnt);
+        }
+        
+    }
+    
+    for(int i = 1; i<=n; i++)
+    {
+        if(score[i] == maxs)
+        {
+            cout<<"Yodeller "<<i<<" is the TopYodeller: score "<<score[i]<<", worst rank "<<wrank[i]<<endl;
+        }
+    }
+    
+    
+    return 0;
+}
