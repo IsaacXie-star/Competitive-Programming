@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+int px, py,c,r;
+
+int main()
+{
+    px = 0,py = 0;
+    cin>>c>>r;
+    int rx,ry;
+    while(cin>>rx>>ry && !(rx == 0 && ry == 0))
+    {
+        if(px + rx > c) px = c; 
+        else if(px + rx < 0) px = 0;
+        else px = px+rx;
+        
+        if(py + ry > r) py = r;
+        else if(py + ry < 0) py = 0;
+        else py = py + ry;
+        
+        cout<<px<<" "<<py<<endl;
+        
+    }
+    
+    
+    
+    return 0;
+}
