@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+    int n;
+    cin>>n;
+    while(n --)
+    {
+        string a,b,c;
+        cin>>a>>b>>c;
+        if(a.size() > b.size()) swap(a,b);
+        if(b.size() > c.size()) swap(b,c);
+        if(a == b.substr(0, a.size()) || a == c.substr(0, a.size()) || b == c.substr(0, b.size()))
+        {
+            cout<<"No"<<endl;
+            continue;
+        }
+        if(a == b.substr(b.size() - a.size(), a.size()) || a == c.substr(c.size() - a.size(), a.size()) || b == c.substr(c.size() - b.size(), b.size()))
+        {
+            cout<<"No"<<endl;
+            continue;
+        }
+        cout<<"Yes"<<endl;
+    }
+    
+    return 0;
+}
