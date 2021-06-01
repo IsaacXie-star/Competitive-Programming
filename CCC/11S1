@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string>
+#include <cmath>>
+//#include <bits/stdc++.h>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <typeinfo>
+#include <stack>
+
+using namespace std;
+
+
+int main()
+{
+  /*int a,b,c,d;
+  int cot = 1;
+  while(cin>>a>>b>>c>>d)
+  {
+      if(a == -1 && b == -1 && c== -1 && d == -1)
+      {
+          break;
+      }
+      else
+      {
+          int ans = 0;
+          if(a >= 23)
+          {
+              a = a%23;
+          }
+          if(b >= 28)
+          {
+              b = b%28;
+          }
+          if(c >= 33)
+          {
+              c = c%33;
+          }
+          int k,j;
+          k = max(a,b);
+          j = max(k,c);
+          for(int i = j; i<= 24618; i++)
+          {
+              if(((i-a)%23 == 0) && ((i-b)%28 == 0) && ((i-c)%33 == 0) && i>d )
+              {
+                  ans = i - d;
+                  break;
+              }
+          }
+
+         cout<<"Case "<<cot<<": the next triple peak occurs in "<<ans<<" days."<<endl;
+      }
+      cot++;
+  }*/
+    int n;
+    cin>>n;
+    int sn,tn;
+    sn = 0;
+    tn = 0;
+    cin.ignore();
+    for(int i = 0; i<n;i++ )
+    {
+
+        string s;
+        getline(cin,s);
+        for(int j = 0; j<s.size(); j++)
+        {
+            if(s[j] == 's' || s[j] == 'S')
+            {
+                sn++;
+            }
+            else if(s[j] == 't' || s[j] == 'T')
+            {
+                tn++;
+            }
+        }
+    }
+    if(tn > sn)
+    {
+        cout<<"English"<<endl;
+    }
+    else
+    {
+        cout<<"French"<<endl;
+    }
+
+
+
+ return 0;
+}
